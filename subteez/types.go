@@ -5,18 +5,20 @@ const StatusNotFound = "not found"
 const StatusBadRequest = "bad request"
 const StatusServerError = "server error"
 
+type Language string
+
 type SearchRequest struct {
-	Query    string   `form:"query" json:"query" uri:"query" binding:"required"`
-	Language []string `form:"lang" json:"lang" uri:"lang" binding:"required"`
+	Query           string     `json:"query"`
+	LanguageFilters []Language `json:"lang"`
 }
 
 type SubtitleDetailsRequest struct {
-	ID       string   `form:"id" json:"id" uri:"id" binding:"required"`
-	Language []string `form:"lang" json:"lang" uri:"lang" binding:"required"`
+	ID              string     `json:"id"`
+	LanguageFilters []Language `json:"lang"`
 }
 
 type SubtitleDownloadRequest struct {
-	ID string `form:"id" json:"id" uri:"id" binding:"required"`
+	ID string `json:"id"`
 }
 
 type SearchResultItem struct {
@@ -31,12 +33,12 @@ type SearchResult struct {
 }
 
 type SubtitleFile struct {
-	ID       string `json:"id"`
-	Language string `json:"lang"`
-	Name     string `json:"name"`
-	Author   string `json:"author"`
-	Comment  string `json:"comment"`
-	Title    string `json:"title"`
+	ID       string   `json:"id"`
+	Language Language `json:"lang"`
+	Name     string   `json:"name"`
+	Author   string   `json:"author"`
+	Comment  string   `json:"comment"`
+	Title    string   `json:"title"`
 }
 
 type SubtitleDetails struct {
