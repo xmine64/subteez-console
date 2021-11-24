@@ -79,7 +79,9 @@ func (client subteezClient) Search(request SearchRequest) (*SearchResult, error)
 		return nil, err
 	}
 	if result.Status != StatusOk {
-		return nil, &ClientError{"Unknown error"}
+		return nil, &ClientError{
+			fmt.Sprintf("Status %s is not OK.", result.Status),
+		}
 	}
 	return &result, nil
 }
@@ -95,7 +97,9 @@ func (client subteezClient) GetDetails(request SubtitleDetailsRequest) (*Subtitl
 		return nil, err
 	}
 	if result.Status != StatusOk {
-		return nil, &ClientError{"Unknown error"}
+		return nil, &ClientError{
+			fmt.Sprintf("Status %s is not OK.", result.Status),
+		}
 	}
 	return &result, nil
 }
