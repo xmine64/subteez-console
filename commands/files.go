@@ -2,8 +2,11 @@ package commands
 
 import (
 	"errors"
+	"flag"
 	"fmt"
+	"strings"
 	"subteez/config"
+	"subteez/interactive"
 	"subteez/messages"
 	"subteez/subteez"
 )
@@ -11,12 +14,21 @@ import (
 func mainFiles(args []string, cfg config.Config) error {
 	client := subteez.NewClient(cfg.GetServer())
 
-	if len(args) < 2 {
-		return errors.New(messages.NotEnoughArguments)
+	id := strings.Join(flag.Args()[1:], " ")
+
+	if id == "" {
+		return errors.New(messages.EmptyID)
+	}
+
+	if cfg.IsInteractive() {
+		context := interactive.Context{}
+		context.Initialize(cfg)
+		go context.NavigateToDetails(id)
+		return context.Run()
 	}
 
 	request := subteez.SubtitleDetailsRequest{
-		ID:              args[1],
+		ID:              id,
 		LanguageFilters: cfg.GetLanguageFilters(),
 	}
 	response, err := client.GetDetails(request)

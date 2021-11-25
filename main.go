@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"os"
 	"subteez/commands"
@@ -25,14 +26,27 @@ func main() {
 		log.Fatal(messages.NotEnoughArguments)
 	}
 
-	commands.AllCommands["help"] = commands.HelpCommand
+	interactiveFlag := flag.Bool("interactive", false, "Enable interactive mode")
+	helpFlag := flag.Bool("help", false, "Get help")
 
-	command, exists := commands.AllCommands[os.Args[1]]
-	if !exists {
-		log.Fatalf(messages.CommandNotFound, os.Args[1])
+	flag.Parse()
+
+	if *interactiveFlag {
+		appConfig.SetInteractive(true)
 	}
-	err := command.Main(os.Args[1:], appConfig)
-	if err != nil {
+
+	if *helpFlag {
+		if err := commands.HelpCommand.Main(flag.Args(), appConfig); err != nil {
+			log.Fatal(err)
+		}
+		return
+	}
+
+	command, exists := commands.AllCommands[flag.Args()[0]]
+	if !exists {
+		log.Fatalf(messages.CommandNotFound, flag.Args()[0])
+	}
+	if err := command.Main(flag.Args(), appConfig); err != nil {
 		log.Fatal(err)
 	}
 

@@ -15,13 +15,16 @@ type Config interface {
 	ClearLanguageFilters()
 	AddLanguageFilter(subteez.Language)
 	RemoveLanguageFilter(subteez.Language)
+	IsInteractive() bool
+	SetInteractive(bool)
 }
 
 type ConfigFile struct {
 	filePath string
 	data     struct {
-		Server    string             `json:"server"`
-		Languages []subteez.Language `json:"languages"`
+		Server      string             `json:"server"`
+		Languages   []subteez.Language `json:"languages"`
+		Interactive bool               `json:"interactive"`
 	}
 }
 
@@ -86,4 +89,12 @@ func (c *ConfigFile) RemoveLanguageFilter(lang subteez.Language) {
 			return
 		}
 	}
+}
+
+func (c *ConfigFile) IsInteractive() bool {
+	return c.data.Interactive
+}
+
+func (c *ConfigFile) SetInteractive(interactive bool) {
+	c.data.Interactive = interactive
 }
