@@ -6,13 +6,15 @@ import (
 	"os"
 	"subteez/commands"
 	"subteez/config"
+	"subteez/constants"
+	"subteez/messages"
 	"subteez/subteez"
 )
 
 func main() {
-	appConfig := config.NewConfigFile("subteez.config")
+	appConfig := config.NewConfigFile(constants.ConfigFileName)
 	if appConfig.Load() != nil {
-		appConfig.SetServer("https://subteez1.herokuapp.com")
+		appConfig.SetServer(constants.DefaultServer)
 		appConfig.SetLanguageFilters(subteez.Languages)
 		if appConfig.Save() != nil {
 			fmt.Println("Note: Error in saving default config")
@@ -20,14 +22,14 @@ func main() {
 	}
 
 	if len(os.Args) < 2 {
-		log.Fatal("not enough arguments")
+		log.Fatal(messages.NotEnoughArguments)
 	}
 
 	commands.AllCommands["help"] = commands.HelpCommand
 
 	command, exists := commands.AllCommands[os.Args[1]]
 	if !exists {
-		log.Fatalf("command %s not found", os.Args[1])
+		log.Fatalf(messages.CommandNotFound, os.Args[1])
 	}
 	err := command.Main(os.Args[1:], appConfig)
 	if err != nil {

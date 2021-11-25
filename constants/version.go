@@ -1,4 +1,4 @@
-package config
+package constants
 
 const (
 	Name         = "Subteez Console"

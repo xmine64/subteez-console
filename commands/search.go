@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"subteez/config"
+	"subteez/messages"
 	"subteez/subteez"
 )
 
@@ -11,7 +12,7 @@ func mainSearch(args []string, cfg config.Config) error {
 	client := subteez.NewClient(cfg.GetServer())
 
 	if len(args) < 2 {
-		return errors.New("not enough arguments")
+		return errors.New(messages.NotEnoughArguments)
 	}
 
 	request := subteez.SearchRequest{
@@ -24,11 +25,11 @@ func mainSearch(args []string, cfg config.Config) error {
 	}
 
 	if len(response.Result) < 1 {
-		return errors.New("no any movie/series found")
+		return errors.New(messages.NoSearchResult)
 	}
 
 	for _, item := range response.Result {
-		fmt.Printf("%s, %s, %d\n", item.ID, item.Name, item.Count)
+		fmt.Printf(messages.SearchRow, item.ID, item.Name, item.Count)
 	}
 	return nil
 }

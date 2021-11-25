@@ -1,6 +1,9 @@
 package commands
 
-import "subteez/config"
+import (
+	"subteez/config"
+	"subteez/messages"
+)
 
 type Command struct {
 	Name        string
@@ -11,17 +14,17 @@ type Command struct {
 var AllCommands = map[string]Command{
 	"search": {
 		Name:        "search",
-		Description: "Search for movie or series titles",
+		Description: messages.SearchDescription,
 		Main:        mainSearch,
 	},
 	"files": {
 		Name:        "files",
-		Description: "List all available subtitle files",
+		Description: messages.FilesDescription,
 		Main:        mainFiles,
 	},
 	"download": {
 		Name:        "download",
-		Description: "Download a subtitle file",
+		Description: messages.DownloadDescription,
 		Main:        mainDownload,
 	},
 }

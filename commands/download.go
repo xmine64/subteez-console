@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"subteez/config"
+	"subteez/messages"
 	"subteez/subteez"
 )
 
@@ -11,7 +12,7 @@ func mainDownload(args []string, cfg config.Config) error {
 	client := subteez.NewClient(cfg.GetServer())
 
 	if len(args) < 2 {
-		return errors.New("not enough arguments")
+		return errors.New(messages.NotEnoughArguments)
 	}
 
 	request := subteez.SubtitleDownloadRequest{

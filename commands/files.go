@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"subteez/config"
+	"subteez/messages"
 	"subteez/subteez"
 )
 
@@ -11,7 +12,7 @@ func mainFiles(args []string, cfg config.Config) error {
 	client := subteez.NewClient(cfg.GetServer())
 
 	if len(args) < 2 {
-		return errors.New("not enough arguments")
+		return errors.New(messages.NotEnoughArguments)
 	}
 
 	request := subteez.SubtitleDetailsRequest{
@@ -24,11 +25,11 @@ func mainFiles(args []string, cfg config.Config) error {
 	}
 
 	if len(response.Files) < 1 {
-		return errors.New("no any subtitle file found")
+		return errors.New(messages.NoFileFound)
 	}
 
 	for _, item := range response.Files {
-		fmt.Printf("%s, %s, %s, %s\n", item.ID, item.Language.GetTitle(), item.Title, item.Author)
+		fmt.Printf(messages.FileRow, item.ID, item.Language.GetTitle(), item.Title, item.Author)
 	}
 
 	return nil
