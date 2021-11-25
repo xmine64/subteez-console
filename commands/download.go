@@ -1,22 +1,27 @@
 package commands
 
 import (
+	"errors"
 	"fmt"
-	"log"
 	"subteez/config"
 	"subteez/subteez"
 )
 
-func DownloadMain(cfg config.Config, id string) {
+func mainDownload(args []string, cfg config.Config) error {
 	client := subteez.NewClient(cfg.GetServer())
 
+	if len(args) < 2 {
+		return errors.New("not enough arguments")
+	}
+
 	request := subteez.SubtitleDownloadRequest{
-		ID: id,
+		ID: args[1],
 	}
 	response, err := client.Download(request)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	fmt.Printf("%d bytes downloaded.\n", len(response))
+	return errors.New("not implemented, yet")
 }

@@ -2,6 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"os"
+	"subteez/commands"
 	"subteez/config"
 	"subteez/subteez"
 )
@@ -15,4 +18,20 @@ func main() {
 			fmt.Println("Note: Error in saving default config")
 		}
 	}
+
+	if len(os.Args) < 2 {
+		log.Fatal("not enough arguments")
+	}
+
+	commands.AllCommands["help"] = commands.HelpCommand
+
+	command, exists := commands.AllCommands[os.Args[1]]
+	if !exists {
+		log.Fatalf("command %s not found", os.Args[1])
+	}
+	err := command.Main(os.Args[1:], appConfig)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 }

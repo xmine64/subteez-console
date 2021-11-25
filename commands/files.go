@@ -1,30 +1,35 @@
 package commands
 
 import (
+	"errors"
 	"fmt"
-	"log"
 	"subteez/config"
 	"subteez/subteez"
 )
 
-func FilesMain(cfg config.Config, id string) {
+func mainFiles(args []string, cfg config.Config) error {
 	client := subteez.NewClient(cfg.GetServer())
 
+	if len(args) < 2 {
+		return errors.New("not enough arguments")
+	}
+
 	request := subteez.SubtitleDetailsRequest{
-		ID:              id,
+		ID:              args[1],
 		LanguageFilters: cfg.GetLanguageFilters(),
 	}
 	response, err := client.GetDetails(request)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	if len(response.Files) < 1 {
-		fmt.Println("No any file found.")
-		return
+		return errors.New("no any subtitle file found")
 	}
 
 	for _, item := range response.Files {
 		fmt.Printf("%s, %s, %s, %s\n", item.ID, item.Language.GetTitle(), item.Title, item.Author)
 	}
+
+	return nil
 }
