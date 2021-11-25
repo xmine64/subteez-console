@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"subteez/commands"
@@ -16,8 +15,9 @@ func main() {
 	if appConfig.Load() != nil {
 		appConfig.SetServer(constants.DefaultServer)
 		appConfig.SetLanguageFilters(subteez.Languages)
-		if appConfig.Save() != nil {
-			fmt.Println("Note: Error in saving default config")
+		err := appConfig.Save()
+		if err != nil {
+			log.Fatal(err)
 		}
 	}
 
