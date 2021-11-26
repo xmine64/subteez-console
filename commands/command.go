@@ -27,4 +27,9 @@ var AllCommands = map[string]Command{
 		Description: messages.DownloadDescription,
 		Main:        mainDownload,
 	},
+	"config": {
+		Name:        "config",
+		Description: messages.ConfigDescription,
+		Main:        mainConfig,
+	},
 }
