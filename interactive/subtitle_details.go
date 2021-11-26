@@ -47,7 +47,7 @@ func (c *Context) showItemDetails() {
 	header.SetBorder(true).SetTitle(messages.MovieInfoTitle)
 
 	details := tview.NewTextView().SetWrap(true).SetWordWrap(true)
-	details.SetBorder(true).SetTitle(messages.FileDetails)
+	details.SetBorder(true).SetTitle(messages.FileDetailsTitle)
 
 	list := tview.NewList().SetChangedFunc(func(index int, mainText, secondaryText string, shortcut rune) {
 		c.fileId = response.Files[index].ID
