@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"os"
 	"subteez/commands"
@@ -23,11 +24,12 @@ func main() {
 	}
 
 	if len(os.Args) < 2 {
+		showHelp()
 		log.Fatal(messages.NotEnoughArguments)
 	}
 
-	interactiveFlag := flag.Bool("interactive", false, "Enable interactive mode")
-	helpFlag := flag.Bool("help", false, "Get help")
+	interactiveFlag := flag.Bool("interactive", false, "")
+	helpFlag := flag.Bool("help", false, "")
 
 	flag.Parse()
 
@@ -36,18 +38,53 @@ func main() {
 	}
 
 	if *helpFlag {
-		if err := commands.HelpCommand.Main(flag.Args(), appConfig); err != nil {
-			log.Fatal(err)
-		}
+		showHelpTopic(flag.Arg(0))
 		return
 	}
 
 	command, exists := commands.AllCommands[flag.Args()[0]]
 	if !exists {
+		showHelp()
 		log.Fatalf(messages.CommandNotFound, flag.Args()[0])
 	}
 	if err := command.Main(flag.Args(), appConfig); err != nil {
 		log.Fatal(err)
 	}
 
+}
+
+func showHelp() {
+	fmt.Printf(
+		messages.HelpMessage,
+		constants.Name,
+		constants.VersionMajor,
+		constants.VersionMinor,
+		constants.VersionBuild,
+		constants.ExeName,
+	)
+
+	for _, command := range commands.AllCommands {
+		fmt.Printf(messages.CommandRow, command.Name, command.Description)
+	}
+}
+
+func showHelpTopic(topic string) {
+	switch topic {
+	case "":
+		showHelp()
+		return
+	case "search":
+		fmt.Printf(messages.SearchHelpTopic, constants.ExeName)
+		return
+	case "files":
+		fmt.Printf(messages.FilesHelpTopic, constants.ExeName)
+		return
+	case "download":
+		fmt.Printf(messages.DownloadHelpTopic, constants.ExeName)
+		return
+	default:
+		showHelp()
+		log.Fatalf(messages.TopicNotFound, topic)
+		return
+	}
 }
