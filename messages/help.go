@@ -9,7 +9,7 @@ Options:
     
     -help [command] : Show help message
 
-	-interactive    : Enable interactive mode
+    -interactive    : Enable interactive mode
 
 Commands:
 	
