@@ -1,8 +1,8 @@
 package interactive
 
 import (
-	"errors"
 	"fmt"
+	"subteez/errors"
 	"subteez/messages"
 	"subteez/subteez"
 
@@ -12,7 +12,7 @@ import (
 // must not be called from main loop and event handlers
 func (c *Context) showSearchResultList() {
 	if c.query == "" {
-		c.error = errors.New(messages.EmptyQuery)
+		c.error = errors.ErrEmptyQuery
 		c.app.Stop()
 		return
 	}
@@ -33,7 +33,7 @@ func (c *Context) showSearchResultList() {
 	}
 
 	if len(response.Result) < 1 {
-		c.error = errors.New(messages.NoSearchResult)
+		c.error = errors.ErrNoSearchResult
 		c.app.Stop()
 		return
 	}

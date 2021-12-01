@@ -3,7 +3,6 @@ package subteez
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"time"
@@ -51,15 +50,13 @@ func (client subteezClient) sendRequest(endpoint string, request interface{}) ([
 	if response.StatusCode != http.StatusOK {
 		switch response.StatusCode {
 		case http.StatusNotFound:
-			return nil, &NotFoundError{}
+			return nil, ErrNotFound
 		case http.StatusBadRequest:
-			return nil, &BadRequestError{}
+			return nil, ErrBadRequest
 		case http.StatusInternalServerError:
-			return nil, &ServerError{}
+			return nil, ErrServer
 		}
-		return nil, &ClientError{
-			fmt.Sprintf("Server responeded with status code %d", response.StatusCode),
-		}
+		return nil, ErrUnhandledResponse(response.Status)
 	}
 	responseBody, err := io.ReadAll(response.Body)
 	if err != nil {
@@ -79,9 +76,7 @@ func (client subteezClient) Search(request SearchRequest) (*SearchResult, error)
 		return nil, err
 	}
 	if result.Status != StatusOk {
-		return nil, &ClientError{
-			fmt.Sprintf("Status %s is not OK.", result.Status),
-		}
+		return nil, ErrUnhandledResponse(result.Status)
 	}
 	return &result, nil
 }
@@ -97,9 +92,7 @@ func (client subteezClient) GetDetails(request SubtitleDetailsRequest) (*Subtitl
 		return nil, err
 	}
 	if result.Status != StatusOk {
-		return nil, &ClientError{
-			fmt.Sprintf("Status %s is not OK.", result.Status),
-		}
+		return nil, ErrUnhandledResponse(result.Status)
 	}
 	return &result, nil
 }

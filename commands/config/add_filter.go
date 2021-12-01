@@ -1,21 +1,19 @@
 package config
 
 import (
-	"errors"
 	"subteez/config"
-	serr "subteez/errors"
-	"subteez/messages"
+	"subteez/errors"
 	"subteez/subteez"
 )
 
 func addFilter(args []string, config config.Config) error {
 	if len(args) < 2 {
-		return errors.New(messages.NotEnoughArguments)
+		return errors.ErrNotEnoughArguments
 	}
 
 	if language, err := subteez.ParseLanguage(args[1]); err == nil {
 		if err := config.AddLanguageFilter(language); err == nil {
-			return &serr.ConfigChanged{}
+			return errors.ErrConfigChanged
 		} else {
 			return err
 		}

@@ -26,7 +26,7 @@ func main() {
 
 	if len(os.Args) < 2 {
 		showHelp()
-		log.Fatal(messages.NotEnoughArguments)
+		log.Fatal(errors.ErrNotEnoughArguments)
 	}
 
 	interactiveFlag := flag.Bool("interactive", false, "")
@@ -46,7 +46,7 @@ func main() {
 	command, exists := commands.AllCommands[flag.Args()[0]]
 	if !exists {
 		showHelp()
-		log.Fatalf(messages.CommandNotFound, flag.Args()[0])
+		log.Fatal(errors.ErrCommandNotFound(flag.Args()[0]))
 	}
 	if err := command.Main(flag.Args(), configFile); err != nil {
 		if _, ok := err.(*errors.ConfigChanged); ok {
@@ -79,7 +79,7 @@ func showHelpTopic(topic string) {
 
 	if !exists {
 		showHelp()
-		log.Fatalf(messages.TopicNotFound, topic)
+		log.Fatal(errors.ErrHelpTopicNotFound(topic))
 	}
 
 	fmt.Println(command.HelpTopic)

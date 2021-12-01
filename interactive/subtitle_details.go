@@ -1,8 +1,8 @@
 package interactive
 
 import (
-	"errors"
 	"fmt"
+	"subteez/errors"
 	"subteez/messages"
 	"subteez/subteez"
 
@@ -12,7 +12,7 @@ import (
 // must not be called from main loop and event handlers
 func (c *Context) showItemDetails() {
 	if c.movieId == "" {
-		c.error = errors.New(messages.EmptyID)
+		c.error = errors.ErrEmptyID
 		c.app.Stop()
 		return
 	}
@@ -33,7 +33,7 @@ func (c *Context) showItemDetails() {
 	}
 
 	if len(response.Files) < 1 {
-		c.error = errors.New(messages.NoFileFound)
+		c.error = errors.ErrNoFileFound
 		c.app.Stop()
 		return
 	}

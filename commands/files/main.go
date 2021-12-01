@@ -1,11 +1,11 @@
 package files
 
 import (
-	"errors"
 	"flag"
 	"fmt"
 	"strings"
 	"subteez/config"
+	"subteez/errors"
 	"subteez/interactive"
 	"subteez/messages"
 	"subteez/subteez"
@@ -17,7 +17,7 @@ func Main(args []string, cfg config.Config) error {
 	id := strings.Join(flag.Args()[1:], " ")
 
 	if id == "" {
-		return errors.New(messages.EmptyID)
+		return errors.ErrEmptyID
 	}
 
 	if cfg.IsInteractive() {
@@ -37,7 +37,7 @@ func Main(args []string, cfg config.Config) error {
 	}
 
 	if len(response.Files) < 1 {
-		return errors.New(messages.NoFileFound)
+		return errors.ErrNoFileFound
 	}
 
 	for _, item := range response.Files {

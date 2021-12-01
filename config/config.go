@@ -2,9 +2,8 @@ package config
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
-	"subteez/messages"
+	"subteez/errors"
 	"subteez/subteez"
 )
 
@@ -81,7 +80,7 @@ func (c *ConfigFile) ClearLanguageFilters() {
 func (c *ConfigFile) AddLanguageFilter(lang subteez.Language) error {
 	for _, language := range c.data.Languages {
 		if language == lang {
-			return fmt.Errorf(messages.DuplicateLanguage, lang)
+			return errors.ErrDuplicateLanguage(lang)
 		}
 	}
 	c.data.Languages = append(c.data.Languages, lang)
@@ -97,7 +96,7 @@ func (c *ConfigFile) RemoveLanguageFilter(lang subteez.Language) error {
 			return nil
 		}
 	}
-	return fmt.Errorf(messages.LanguageNotFound, lang)
+	return errors.ErrLanguageNotFound(lang)
 }
 
 func (c *ConfigFile) IsInteractive() bool {

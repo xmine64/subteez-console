@@ -1,31 +1,28 @@
 package config
 
 import (
-	"errors"
-	"fmt"
 	"strconv"
 	"subteez/config"
-	serr "subteez/errors"
-	"subteez/messages"
+	"subteez/errors"
 )
 
 func set(args []string, config config.Config) error {
 	if len(args) < 3 {
-		return errors.New(messages.NotEnoughArguments)
+		return errors.ErrNotEnoughArguments
 	}
 
 	switch args[1] {
 	case "server":
 		config.SetServer(args[2])
-		return &serr.ConfigChanged{}
+		return errors.ErrConfigChanged
 	case "interactive":
 		if boolValue, err := strconv.ParseBool(args[2]); err == nil {
 			config.SetInteractive(boolValue)
-			return &serr.ConfigChanged{}
+			return errors.ErrConfigChanged
 		} else {
 			return err
 		}
 	default:
-		return fmt.Errorf(messages.OptionNotFound, args[1])
+		return errors.ErrConfigOptionNotFound(args[1])
 	}
 }

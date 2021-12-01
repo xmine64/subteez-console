@@ -7,7 +7,7 @@ Interactive Mode = %t
 Enabled Language Filters:
 `
 
-	OptionNotFound = `option "%s" not found`
+	ConfigOptionNotFound = `config option "%s" not found`
 
 	DuplicateLanguage = `language "%s" already has been added to filters`
 

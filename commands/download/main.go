@@ -1,10 +1,9 @@
 package download
 
 import (
-	"errors"
 	"fmt"
 	"subteez/config"
-	"subteez/messages"
+	"subteez/errors"
 	"subteez/subteez"
 )
 
@@ -12,7 +11,7 @@ func Main(args []string, cfg config.Config) error {
 	client := subteez.NewClient(cfg.GetServer())
 
 	if len(args) < 2 {
-		return errors.New(messages.NotEnoughArguments)
+		return errors.ErrNotEnoughArguments
 	}
 
 	request := subteez.SubtitleDownloadRequest{
@@ -23,6 +22,5 @@ func Main(args []string, cfg config.Config) error {
 		return err
 	}
 
-	fmt.Printf("%d bytes downloaded.\n", len(response))
-	return errors.New("not implemented, yet")
+	return fmt.Errorf("file saving not implemented but %d bytes downloaded", len(response))
 }

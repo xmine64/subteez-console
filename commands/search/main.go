@@ -1,11 +1,11 @@
 package search
 
 import (
-	"errors"
 	"flag"
 	"fmt"
 	"strings"
 	"subteez/config"
+	"subteez/errors"
 	"subteez/interactive"
 	"subteez/messages"
 	"subteez/subteez"
@@ -24,7 +24,7 @@ func Main(args []string, cfg config.Config) error {
 	}
 
 	if query == "" {
-		return errors.New(messages.EmptyQuery)
+		return errors.ErrEmptyQuery
 	}
 
 	request := subteez.SearchRequest{
@@ -37,7 +37,7 @@ func Main(args []string, cfg config.Config) error {
 	}
 
 	if len(response.Result) < 1 {
-		return errors.New(messages.NoSearchResult)
+		return errors.ErrNoSearchResult
 	}
 
 	for _, item := range response.Result {

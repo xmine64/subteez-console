@@ -1,16 +1,14 @@
 package config
 
 import (
-	"errors"
 	"subteez/config"
-	serr "subteez/errors"
-	"subteez/messages"
+	"subteez/errors"
 	"subteez/subteez"
 )
 
 func setFilter(args []string, config config.Config) error {
 	if len(args) < 2 {
-		return errors.New(messages.NotEnoughArguments)
+		return errors.ErrNotEnoughArguments
 	}
 
 	config.ClearLanguageFilters()
@@ -25,5 +23,5 @@ func setFilter(args []string, config config.Config) error {
 		}
 	}
 
-	return &serr.ConfigChanged{}
+	return errors.ErrConfigChanged
 }

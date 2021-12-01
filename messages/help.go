@@ -31,5 +31,5 @@ In interactive mode you can select a file using arrow keys.
 Download file with specified file ID. Interactive mode is not supported.
 `
 
-	TopicNotFound = "topic %s not found.\n"
+	TopicNotFound = `topic "%s" not found`
 )

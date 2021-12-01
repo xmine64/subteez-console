@@ -1,9 +1,8 @@
 package config
 
 import (
-	"fmt"
 	"subteez/config"
-	"subteez/messages"
+	"subteez/errors"
 )
 
 func Main(args []string, config config.Config) error {
@@ -13,7 +12,7 @@ func Main(args []string, config config.Config) error {
 
 	command, exists := commands[args[1]]
 	if !exists {
-		return fmt.Errorf(messages.CommandNotFound, args[1])
+		return errors.ErrCommandNotFound(args[1])
 	}
 	return command(args[1:], config)
 }
