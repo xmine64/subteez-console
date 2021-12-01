@@ -2,25 +2,16 @@
 This is a console version of [Subteez App](https://play.google.com/store/apps/details?id=madamin.subtitles).
 You can use it to search and download subtitles from [Subteez server](https://github.com/minusium/subteez-subscene-proxy), or write scripts to do automated tasks.
 
-# Screenshots
-* Interactive Mode:
-
-![screenshot 1](assets/1.png)
-
-![screenshot 2](assets/2.png)
-
-![screenshot 3](assets/3.png)
-
 # Usage
 
 ```
-Usage: subteez [-help | -interactive] <Command> <Arguments>
+Usage: subteez [-help | -tui] <Command> <Arguments>
 
 Options:
 
     -help [command] : Show help message
 
-    -interactive    : Enable interactive mode
+    -tui            : Enable interactive TUI mode
 
     -script         : Enable script mode
                       Script mode disables log and formats output for using in scripts
@@ -37,13 +28,25 @@ Commands:
 
 ```
 
-## Examples:
+# Screenshots
+* Interactive Mode:
 
-* Use interactive mode:
+![screenshot 1](assets/1.png)
+
+![screenshot 2](assets/2.png)
+
+![screenshot 3](assets/3.png)
+
+![screenshot 4](assets/4.png)
+
+
+# Examples:
+
+* Use interactive TUI mode:
 ```
-> subteez -interactive search
+> subteez -tui search
 
-> subteez -interactive search arcane
+> subteez -tui search arcane
 
 ```
 
@@ -67,9 +70,9 @@ Author:   NguyenBich
 
 ```
 
-* Set interactive mode to be enabled without `-interactive` option:
+* Set tui mode to be enabled without `-tui` option:
 ```
-> subteez config set interactive true
+> subteez config set tui true
 
 ```
 
