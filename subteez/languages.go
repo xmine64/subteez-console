@@ -5,58 +5,90 @@ import (
 	"strings"
 )
 
-var Languages = []Language{
-	"en", "fa", "ar", "hi", "de", "fr", "it", "pl", "ru", "es", "tr",
-}
+type Language string
 
-func (lang Language) GetTitle() string {
+// valid values of language
+var (
+	EnglishLanguage = Language("en")
+	PersianLanguage = Language("fa")
+	ArabicLanguage  = Language("ar")
+	HindiLanguage   = Language("hi")
+	GermanLanguage  = Language("de")
+	FrenchLanguage  = Language("fr")
+	ItalianLanguage = Language("it")
+	PolishLanguage  = Language("pl")
+	RussianLanguage = Language("ru")
+	SpanishLanguage = Language("es")
+	TurkishLanguage = Language("tr")
+
+	Languages = []Language{
+		EnglishLanguage,
+		PersianLanguage,
+		ArabicLanguage,
+		HindiLanguage,
+		GermanLanguage,
+		FrenchLanguage,
+		ItalianLanguage,
+		PolishLanguage,
+		RussianLanguage,
+		SpanishLanguage,
+		TurkishLanguage,
+	}
+)
+
+// get display name of language
+func (value Language) GetTitle() string {
 	titles := map[Language]string{
-		"en": "English",
-		"fa": "Persian",
-		"ar": "Arabic",
-		"hi": "Hindi",
-		"de": "German",
-		"fr": "French",
-		"it": "Italian",
-		"pl": "Polish",
-		"ru": "Russian",
-		"es": "Spanish",
-		"tr": "Turkish",
+		EnglishLanguage: "English",
+		PersianLanguage: "Persian",
+		ArabicLanguage:  "Arabic",
+		HindiLanguage:   "Hindi",
+		GermanLanguage:  "German",
+		FrenchLanguage:  "French",
+		ItalianLanguage: "Italian",
+		PolishLanguage:  "Polish",
+		RussianLanguage: "Russian",
+		SpanishLanguage: "Spanish",
+		TurkishLanguage: "Turkish",
 	}
-	result, exists := titles[lang]
-	if !exists {
-		return "Unknown"
+	if result, exists := titles[value]; exists {
+		return result
+	} else {
+		return "Uknown"
 	}
-	return result
 }
 
-func (lang Language) GetDownloadPathPart() (string, error) {
+// get language code
+func (value Language) GetCode() string {
+	return string(value)
+}
+
+// get language code used for generating download links
+func (value Language) GetDownloadPathPart() (string, error) {
 	id := map[Language]string{
-		"en": "english",
-		"fa": "farsi_persian",
-		"ar": "arabic",
-		"hi": "hindi",
-		"de": "german",
-		"fr": "french",
-		"it": "italian",
-		"pl": "polish",
-		"ru": "russian",
-		"es": "spanish",
-		"tr": "turkish",
+		EnglishLanguage: "english",
+		PersianLanguage: "farsi_persian",
+		ArabicLanguage:  "arabic",
+		HindiLanguage:   "hindi",
+		GermanLanguage:  "german",
+		FrenchLanguage:  "french",
+		ItalianLanguage: "italian",
+		PolishLanguage:  "polish",
+		RussianLanguage: "russian",
+		SpanishLanguage: "spanish",
+		TurkishLanguage: "turkish",
 	}
-	result, exists := id[lang]
-	if !exists {
+	if result, exists := id[value]; exists {
+		return result, nil
+	} else {
 		return "", strconv.ErrRange
 	}
-	return result, nil
 }
 
+// parse string to Language
 func ParseLanguage(str string) (Language, error) {
 	for _, language := range Languages {
-		if strings.EqualFold(string(language), str) {
-			return language, nil
-		}
-		if strings.EqualFold(language.GetTitle(), str) {
+		if strings.EqualFold(language.GetCode(), str) || strings.EqualFold(language.GetTitle(), str) {
 			return language, nil
 		}
 	}

@@ -1,4 +1,6 @@
-package config
+// main of "show" subcommand
+
+package config_command
 
 import (
 	"fmt"
@@ -12,7 +14,7 @@ func dump(args []string, config config.Config) error {
 			messages.DumpConfig,
 			config.GetServer(),
 			config.IsInteractive(),
-			config.IsScriptMode(),
+			true,
 			config.GetLanguageFilters(),
 		)
 	} else {
@@ -20,7 +22,7 @@ func dump(args []string, config config.Config) error {
 			messages.DumpConfigHumanReadable,
 			config.GetServer(),
 			config.IsInteractive(),
-			config.IsScriptMode(),
+			false,
 		)
 
 		for _, language := range config.GetLanguageFilters() {

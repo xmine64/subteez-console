@@ -1,4 +1,6 @@
-package interactive
+// interactive TUI for showing search results
+
+package tui
 
 import (
 	"fmt"

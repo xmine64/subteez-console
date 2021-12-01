@@ -1,31 +1,33 @@
-package files
+// main of "files" command
+
+package files_command
 
 import (
-	"flag"
 	"fmt"
 	"log"
 	"strings"
 	"subteez/config"
 	"subteez/errors"
-	"subteez/interactive"
 	"subteez/messages"
 	"subteez/subteez"
+	"subteez/tui"
 )
 
 func Main(args []string, cfg config.Config) error {
-	client := subteez.NewClient(cfg.GetServer())
-
-	id := strings.Join(flag.Args()[1:], " ")
-	if !strings.HasPrefix(id, "/subtitles/") {
-		id = "/subtitles/" + id
-	}
+	id := args[1]
 
 	if id == "" {
 		return errors.ErrEmptyID
 	}
 
+	// generate full address if given address is not a full address
+	if !strings.HasPrefix(id, "/subtitles/") {
+		id = "/subtitles/" + id
+	}
+
+	// run in interactive mode if it's enabled
 	if cfg.IsInteractive() {
-		context := interactive.Context{}
+		context := tui.Context{}
 		context.Initialize(cfg)
 		go context.NavigateToDetails(id)
 		return context.Run()
@@ -35,6 +37,8 @@ func Main(args []string, cfg config.Config) error {
 		log.Printf(messages.GettingPage, id)
 	}
 
+	// send request
+	client := subteez.NewClient(cfg.GetServer())
 	request := subteez.SubtitleDetailsRequest{
 		ID:              id,
 		LanguageFilters: cfg.GetLanguageFilters(),
@@ -48,16 +52,18 @@ func Main(args []string, cfg config.Config) error {
 		return errors.ErrNoFileFound
 	}
 
+	// print result
+
 	if cfg.IsScriptMode() {
 		for _, item := range response.Files {
 			fmt.Printf("%s,%s,%s,%s\n", item.ID, item.Language, item.Title, item.Author)
 		}
-	} else {
-		for _, item := range response.Files {
-			idParts := strings.SplitAfterN(item.ID, "/", 5)
-			fmt.Printf(messages.FileItem, idParts[4], item.Language.GetTitle(), item.Title, item.Author)
-		}
+		return nil
 	}
 
+	for _, item := range response.Files {
+		idParts := strings.SplitAfterN(item.ID, "/", 5)
+		fmt.Printf(messages.FileItem, idParts[4], item.Language.GetTitle(), item.Title, item.Author)
+	}
 	return nil
 }

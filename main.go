@@ -6,16 +6,17 @@ import (
 	"log"
 	"os"
 	"path"
-	"subteez/commands"
+	"subteez/cli"
 	"subteez/config"
 	"subteez/constants"
 	"subteez/errors"
-	"subteez/interactive"
 	"subteez/messages"
 	"subteez/subteez"
+	"subteez/tui"
 )
 
 func main() {
+	// find config folder
 	configDir, err := os.UserConfigDir()
 	if err != nil {
 		log.Fatal(err)
@@ -26,6 +27,7 @@ func main() {
 	}
 	configFilePath := path.Join(configDir, constants.ConfigFileName)
 
+	// set command-line flags
 	configFileFlag := flag.String("config", configFilePath, "")
 	interactiveFlag := flag.Bool("interactive", false, "")
 	scriptFlag := flag.Bool("script", false, "")
@@ -33,6 +35,7 @@ func main() {
 
 	flag.Parse()
 
+	// load config file, and if it doesn't exist create a default one
 	configFile := config.NewConfigFile(*configFileFlag)
 	if configFile.Load() != nil {
 		configFile.SetServer(constants.DefaultServer)
@@ -43,6 +46,7 @@ func main() {
 		}
 	}
 
+	// if stdout is not terminal, enable script mode automatically
 	if fileInfo, _ := os.Stdout.Stat(); (fileInfo.Mode() & os.ModeCharDevice) == 0 {
 		configFile.SetInteractive(false)
 		configFile.SetScriptMode(true)
@@ -53,6 +57,7 @@ func main() {
 		return
 	}
 
+	// interactive flag and script flag can't be used togother
 	if *interactiveFlag && *scriptFlag {
 		log.Fatal(errors.ErrInteractiveAndScript)
 	}
@@ -70,9 +75,10 @@ func main() {
 			constants.Name, constants.VersionMajor, constants.VersionMinor, constants.VersionBuild, constants.VendorName)
 	}
 
+	// run interactive mode if it's enabled and no command is given
 	if flag.NArg() < 1 {
 		if configFile.IsInteractive() {
-			context := &interactive.Context{}
+			context := &tui.Context{}
 			context.Initialize(configFile)
 			if err := context.Run(); err != nil {
 				log.Fatal(err)
@@ -84,23 +90,26 @@ func main() {
 		}
 	}
 
-	command, exists := commands.AllCommands[flag.Arg(0)]
-	if !exists {
+	// run given command if it exists, else show help message
+	if command, exists := cli.AllCommands[flag.Arg(0)]; exists {
+		if err := command.Main(flag.Args(), configFile); err != nil {
+			// save config file if errors.ErrConfigChanged returned
+			if err == errors.ErrConfigChanged {
+				configFile.Save()
+				log.Print(messages.ConfigFileSaved)
+				return
+			}
+
+			log.Fatal(err)
+		}
+		if !configFile.IsScriptMode() {
+			log.Println(messages.Done)
+		}
+	} else {
 		if !configFile.IsScriptMode() {
 			showHelp()
 		}
 		log.Fatal(errors.ErrCommandNotFound(flag.Arg(0)))
-	}
-	if err := command.Main(flag.Args(), configFile); err != nil {
-		if _, ok := err.(*errors.ConfigChanged); ok {
-			configFile.Save()
-			log.Print(messages.ConfigFileSaved)
-			return
-		}
-		log.Fatal(err)
-	}
-	if !configFile.IsScriptMode() {
-		log.Println(messages.Done)
 	}
 }
 
@@ -114,7 +123,7 @@ func showHelp() {
 		constants.ExeName,
 	)
 
-	for _, command := range commands.AllCommands {
+	for _, command := range cli.AllCommands {
 		fmt.Printf(messages.CommandRow, command.Name, command.Description)
 	}
 }
@@ -125,12 +134,11 @@ func showHelpTopic(topic string) {
 		return
 	}
 
-	command, exists := commands.AllCommands[topic]
-
-	if !exists {
+	// print given help topic if it exists, else show main help topic
+	if command, exists := cli.AllCommands[topic]; exists {
+		fmt.Printf(command.HelpTopic, constants.ExeName)
+	} else {
 		showHelp()
 		log.Fatal(errors.ErrHelpTopicNotFound(topic))
 	}
-
-	fmt.Printf(command.HelpTopic, constants.ExeName)
 }

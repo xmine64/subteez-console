@@ -1,4 +1,6 @@
-package interactive
+// interactive TUI home view
+
+package tui
 
 import (
 	"subteez/messages"
@@ -7,7 +9,7 @@ import (
 	"github.com/rivo/tview"
 )
 
-func (c *Context) showSearchQueryPrompt() {
+func (c *Context) showHome() {
 	input := tview.NewInputField().
 		SetLabel(messages.QueryPrompt).
 		SetPlaceholder(messages.QueryPlaceholder).

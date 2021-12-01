@@ -1,4 +1,6 @@
-package interactive
+// interactive TUI for showing subtitle files
+
+package tui
 
 import (
 	"fmt"

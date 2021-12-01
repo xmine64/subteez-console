@@ -1,4 +1,6 @@
-package config
+// main of "set" command
+
+package config_command
 
 import (
 	"strconv"

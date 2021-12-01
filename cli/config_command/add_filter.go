@@ -1,4 +1,6 @@
-package config
+// main of "add-filter" subcommand
+
+package config_command
 
 import (
 	"subteez/config"

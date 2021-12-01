@@ -60,6 +60,7 @@ func (c *ConfigFile) Load() error {
 	if err := encoder.Decode(&c.data); err != nil {
 		return err
 	}
+	// interactive mode and script mode can't be enabled at same time
 	if c.data.Interactive && c.data.ScriptMode {
 		return errors.ErrInteractiveAndScript
 	}
@@ -86,26 +87,34 @@ func (c *ConfigFile) ClearLanguageFilters() {
 	c.data.Languages = c.data.Languages[:0]
 }
 
-func (c *ConfigFile) AddLanguageFilter(lang subteez.Language) error {
+func (c *ConfigFile) AddLanguageFilter(value subteez.Language) error {
+	// return error if value is already in the language filter list
 	for _, language := range c.data.Languages {
-		if language == lang {
-			return errors.ErrDuplicateLanguage(lang)
+		if language == value {
+			return errors.ErrDuplicateLanguage(value)
 		}
 	}
-	c.data.Languages = append(c.data.Languages, lang)
+
+	c.data.Languages = append(c.data.Languages, value)
 	return nil
 }
 
-func (c *ConfigFile) RemoveLanguageFilter(lang subteez.Language) error {
+func (c *ConfigFile) RemoveLanguageFilter(value subteez.Language) error {
+	// find value in list and remove it
 	length := len(c.data.Languages)
 	for i := 0; i < length; i++ {
-		if c.data.Languages[i] == lang {
-			c.data.Languages[i] = c.data.Languages[length-1]
+		if c.data.Languages[i] == value {
+			// shift items one cell back, and then remove last cell
+			for j := i + 1; j < length; j++ {
+				c.data.Languages[j-1] = c.data.Languages[j]
+			}
 			c.data.Languages = c.data.Languages[:length-1]
 			return nil
 		}
 	}
-	return errors.ErrLanguageNotFound(lang)
+
+	// error if value not found
+	return errors.ErrLanguageNotFound(value)
 }
 
 func (c *ConfigFile) IsInteractive() bool {

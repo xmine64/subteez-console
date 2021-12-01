@@ -1,4 +1,6 @@
-package interactive
+// interactive TUI dialogs
+
+package tui
 
 import (
 	"subteez/messages"
@@ -17,13 +19,13 @@ func (c *Context) showExitDialog() {
 		SetText(messages.ExitDialogText).
 		AddButtons([]string{messages.ButtonYes, messages.ButtonNo}).
 		SetDoneFunc(func(buttonIndex int, buttonLabel string) {
-			if buttonIndex == 0 {
+			if buttonLabel == messages.ButtonYes {
 				c.app.Stop()
 			} else {
 				c.popView()
 			}
 		})
-	exitDialog.SetTitle(messages.AppTitle)
 
+	exitDialog.SetTitle(messages.AppTitle)
 	c.pushView(exitDialog)
 }

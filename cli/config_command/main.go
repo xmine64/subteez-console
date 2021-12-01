@@ -1,15 +1,18 @@
-package config
+// main of config command
+
+package config_command
 
 import (
 	"subteez/config"
 	"subteez/errors"
-	"subteez/interactive"
+	"subteez/tui"
 )
 
 func Main(args []string, config config.Config) error {
+	// if no command given, run interactive mode if it's enabled, or dump configurations
 	if len(args) < 2 {
 		if config.IsInteractive() {
-			context := interactive.Context{}
+			context := tui.Context{}
 			context.Initialize(config)
 			context.NavigateToConfig()
 			return context.Run()
@@ -17,9 +20,10 @@ func Main(args []string, config config.Config) error {
 		return dump(nil, config)
 	}
 
-	command, exists := commands[args[1]]
-	if !exists {
+	// run given command and return its error
+	if command, exists := commands[args[1]]; exists {
+		return command(args[1:], config)
+	} else {
 		return errors.ErrCommandNotFound(args[1])
 	}
-	return command(args[1:], config)
 }

@@ -1,4 +1,6 @@
-package search
+// main of "search" command
+
+package search_command
 
 import (
 	"flag"
@@ -7,18 +9,17 @@ import (
 	"strings"
 	"subteez/config"
 	"subteez/errors"
-	"subteez/interactive"
 	"subteez/messages"
 	"subteez/subteez"
+	"subteez/tui"
 )
 
 func Main(args []string, cfg config.Config) error {
-	client := subteez.NewClient(cfg.GetServer())
-
 	query := strings.Join(flag.Args()[1:], " ")
 
+	// run in interactive mode if it's enabled
 	if cfg.IsInteractive() {
-		context := interactive.Context{}
+		context := tui.Context{}
 		context.Initialize(cfg)
 		go context.NavigateToSearchResult(query)
 		return context.Run()
@@ -32,6 +33,8 @@ func Main(args []string, cfg config.Config) error {
 		log.Printf(messages.Searching, query)
 	}
 
+	// send request
+	client := subteez.NewClient(cfg.GetServer())
 	request := subteez.SearchRequest{
 		Query:           query,
 		LanguageFilters: cfg.GetLanguageFilters(),
@@ -45,16 +48,18 @@ func Main(args []string, cfg config.Config) error {
 		return errors.ErrNoSearchResult
 	}
 
+	// print result
+
 	if cfg.IsScriptMode() {
 		for _, item := range response.Result {
 			fmt.Printf("%s,%s,%d\n", item.ID, item.Name, item.Count)
 		}
-	} else {
-		for _, item := range response.Result {
-			id := strings.SplitAfterN(item.ID, "/", 3)[2]
-			fmt.Printf(messages.SearchItem, item.Name, item.Count, id)
-		}
+		return nil
 	}
 
+	for _, item := range response.Result {
+		id := strings.SplitAfterN(item.ID, "/", 3)[2]
+		fmt.Printf(messages.SearchItem, item.Name, item.Count, id)
+	}
 	return nil
 }

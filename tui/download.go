@@ -1,4 +1,6 @@
-package interactive
+// interactive TUI for file downloading
+
+package tui
 
 import (
 	"fmt"
@@ -11,10 +13,12 @@ import (
 
 // must not be called from main loop and event handlers
 func (c *Context) showDownloadDialog() {
+	// show status dialog
 	c.app.QueueUpdateDraw(func() {
 		c.showStatusDialog(messages.DownloadingStatus)
 	})
 
+	// send request
 	request := subteez.SubtitleDownloadRequest{
 		ID: c.fileId,
 	}
@@ -25,10 +29,12 @@ func (c *Context) showDownloadDialog() {
 		return
 	}
 
+	// show status dialog
 	c.app.QueueUpdateDraw(func() {
 		c.showStatusDialog(messages.WritingStatus)
 	})
 
+	// write downloaded file on disk
 	file, err := os.Create(name)
 	if err != nil {
 		c.error = err

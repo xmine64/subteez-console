@@ -1,4 +1,6 @@
-package config
+// subcommands definitions for config command
+
+package config_command
 
 import "subteez/config"
 
