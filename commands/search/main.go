@@ -1,4 +1,4 @@
-package commands
+package search
 
 import (
 	"errors"
@@ -11,7 +11,7 @@ import (
 	"subteez/subteez"
 )
 
-func mainSearch(args []string, cfg config.Config) error {
+func Main(args []string, cfg config.Config) error {
 	client := subteez.NewClient(cfg.GetServer())
 
 	query := strings.Join(flag.Args()[1:], " ")

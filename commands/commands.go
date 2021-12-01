@@ -1,6 +1,10 @@
 package commands
 
 import (
+	configCommand "subteez/commands/config"
+	"subteez/commands/download"
+	"subteez/commands/files"
+	"subteez/commands/search"
 	"subteez/config"
 	"subteez/messages"
 )
@@ -15,21 +19,21 @@ var AllCommands = map[string]Command{
 	"search": {
 		Name:        "search",
 		Description: messages.SearchDescription,
-		Main:        mainSearch,
+		Main:        search.Main,
 	},
 	"files": {
 		Name:        "files",
 		Description: messages.FilesDescription,
-		Main:        mainFiles,
+		Main:        files.Main,
 	},
 	"download": {
 		Name:        "download",
 		Description: messages.DownloadDescription,
-		Main:        mainDownload,
+		Main:        download.Main,
 	},
 	"config": {
 		Name:        "config",
 		Description: messages.ConfigDescription,
-		Main:        mainConfig,
+		Main:        configCommand.Main,
 	},
 }

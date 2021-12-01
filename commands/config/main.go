@@ -1,4 +1,4 @@
-package commands
+package config
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"subteez/messages"
 )
 
-func mainConfig(args []string, cfg config.Config) error {
+func Main(args []string, cfg config.Config) error {
 	fmt.Printf(
 		messages.DumpConfig,
 		cfg.GetServer(),

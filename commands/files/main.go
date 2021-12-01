@@ -1,4 +1,4 @@
-package commands
+package files
 
 import (
 	"errors"
@@ -11,7 +11,7 @@ import (
 	"subteez/subteez"
 )
 
-func mainFiles(args []string, cfg config.Config) error {
+func Main(args []string, cfg config.Config) error {
 	client := subteez.NewClient(cfg.GetServer())
 
 	id := strings.Join(flag.Args()[1:], " ")
