@@ -14,7 +14,19 @@ import (
 )
 
 func main() {
-	configFile := config.NewConfigFile(constants.ConfigFileName)
+	if len(os.Args) < 2 {
+		showHelp()
+		log.Fatal(errors.ErrNotEnoughArguments)
+	}
+
+	configFilePath := flag.String("config", constants.ConfigFileName, "")
+	interactiveFlag := flag.Bool("interactive", false, "")
+	scriptFlag := flag.Bool("script", false, "")
+	helpFlag := flag.Bool("help", false, "")
+
+	flag.Parse()
+
+	configFile := config.NewConfigFile(*configFilePath)
 	if configFile.Load() != nil {
 		configFile.SetServer(constants.DefaultServer)
 		configFile.SetLanguageFilters(subteez.Languages)
@@ -24,21 +36,10 @@ func main() {
 		}
 	}
 
-	if len(os.Args) < 2 {
-		showHelp()
-		log.Fatal(errors.ErrNotEnoughArguments)
-	}
-
 	if fileInfo, _ := os.Stdout.Stat(); (fileInfo.Mode() & os.ModeCharDevice) == 0 {
 		configFile.SetInteractive(false)
 		configFile.SetScriptMode(true)
 	}
-
-	interactiveFlag := flag.Bool("interactive", false, "")
-	scriptFlag := flag.Bool("script", false, "")
-	helpFlag := flag.Bool("help", false, "")
-
-	flag.Parse()
 
 	if *helpFlag {
 		showHelpTopic(flag.Arg(0))
