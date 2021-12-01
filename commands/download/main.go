@@ -2,6 +2,7 @@ package download
 
 import (
 	"fmt"
+	"strings"
 	"subteez/config"
 	"subteez/errors"
 	"subteez/subteez"
@@ -14,8 +15,25 @@ func Main(args []string, cfg config.Config) error {
 		return errors.ErrNotEnoughArguments
 	}
 
+	id := args[1]
+
+	if !strings.HasPrefix(id, "/subtitles/") {
+		if len(args) < 4 {
+			return errors.ErrNotEnoughArguments
+		}
+		language, err := subteez.ParseLanguage(args[2])
+		if err != nil {
+			return err
+		}
+		languageDownloadPathPart, err := language.GetDownloadPathPart()
+		if err != nil {
+			return err
+		}
+		id = fmt.Sprintf("/subtitles/%s/%s/%s", args[1], languageDownloadPathPart, args[3])
+	}
+
 	request := subteez.SubtitleDownloadRequest{
-		ID: args[1],
+		ID: id,
 	}
 	response, err := client.Download(request)
 	if err != nil {

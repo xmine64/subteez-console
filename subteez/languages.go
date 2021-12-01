@@ -30,6 +30,27 @@ func (lang Language) GetTitle() string {
 	return result
 }
 
+func (lang Language) GetDownloadPathPart() (string, error) {
+	id := map[Language]string{
+		"en": "english",
+		"fa": "farsi_persian",
+		"ar": "arabic",
+		"hi": "hindi",
+		"de": "german",
+		"fr": "french",
+		"it": "italian",
+		"pl": "polish",
+		"ru": "russian",
+		"es": "spanish",
+		"tr": "turkish",
+	}
+	result, exists := id[lang]
+	if !exists {
+		return "", strconv.ErrRange
+	}
+	return result, nil
+}
+
 func ParseLanguage(str string) (Language, error) {
 	for _, language := range Languages {
 		if strings.EqualFold(string(language), str) {

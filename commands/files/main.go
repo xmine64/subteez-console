@@ -15,6 +15,9 @@ func Main(args []string, cfg config.Config) error {
 	client := subteez.NewClient(cfg.GetServer())
 
 	id := strings.Join(flag.Args()[1:], " ")
+	if !strings.HasPrefix(id, "/subtitles/") {
+		id = "/subtitles/" + id
+	}
 
 	if id == "" {
 		return errors.ErrEmptyID
@@ -41,7 +44,8 @@ func Main(args []string, cfg config.Config) error {
 	}
 
 	for _, item := range response.Files {
-		fmt.Printf(messages.FileRow, item.ID, item.Language.GetTitle(), item.Title, item.Author)
+		idParts := strings.SplitAfterN(item.ID, "/", 5)
+		fmt.Printf(messages.FileItem, idParts[4], item.Language.GetTitle(), item.Title, item.Author)
 	}
 
 	return nil

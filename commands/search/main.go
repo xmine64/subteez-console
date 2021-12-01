@@ -41,7 +41,9 @@ func Main(args []string, cfg config.Config) error {
 	}
 
 	for _, item := range response.Result {
-		fmt.Printf(messages.SearchRow, item.ID, item.Name, item.Count)
+		id := strings.SplitAfterN(item.ID, "/", 3)[2]
+		fmt.Printf(messages.SearchItem, item.Name, item.Count, id)
 	}
+
 	return nil
 }
