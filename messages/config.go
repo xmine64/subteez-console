@@ -2,8 +2,14 @@ package messages
 
 const (
 	DumpConfig = `Server           = %s
-Languages        = %v
-Interactive Mode = %t`
+Interactive Mode = %t
 
-	OptionNotFound = `option %s not found`
+Enabled Language Filters:
+`
+
+	OptionNotFound = `option "%s" not found`
+
+	DuplicateLanguage = `language "%s" already has been added to filters`
+
+	LanguageNotFound = `language "%s" not found`
 )

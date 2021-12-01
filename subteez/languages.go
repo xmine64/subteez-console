@@ -1,5 +1,10 @@
 package subteez
 
+import (
+	"strconv"
+	"strings"
+)
+
 var Languages = []Language{
 	"en", "fa", "ar", "hi", "de", "fr", "it", "pl", "ru", "es", "tr",
 }
@@ -23,4 +28,16 @@ func (lang Language) GetTitle() string {
 		return "Unknown"
 	}
 	return result
+}
+
+func ParseLanguage(str string) (Language, error) {
+	for _, language := range Languages {
+		if strings.EqualFold(string(language), str) {
+			return language, nil
+		}
+		if strings.EqualFold(language.GetTitle(), str) {
+			return language, nil
+		}
+	}
+	return "", strconv.ErrRange
 }
