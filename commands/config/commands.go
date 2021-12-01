@@ -7,4 +7,5 @@ var commands = map[string]func(args []string, config config.Config) error{
 	"set":        set,
 	"add-filter": addLanguage,
 	"rm-filter":  removeLanguage,
+	"set-filter": setFilter,
 }
