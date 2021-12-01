@@ -8,16 +8,17 @@ import (
 	"subteez/commands"
 	"subteez/config"
 	"subteez/constants"
+	"subteez/errors"
 	"subteez/messages"
 	"subteez/subteez"
 )
 
 func main() {
-	appConfig := config.NewConfigFile(constants.ConfigFileName)
-	if appConfig.Load() != nil {
-		appConfig.SetServer(constants.DefaultServer)
-		appConfig.SetLanguageFilters(subteez.Languages)
-		err := appConfig.Save()
+	configFile := config.NewConfigFile(constants.ConfigFileName)
+	if configFile.Load() != nil {
+		configFile.SetServer(constants.DefaultServer)
+		configFile.SetLanguageFilters(subteez.Languages)
+		err := configFile.Save()
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -34,7 +35,7 @@ func main() {
 	flag.Parse()
 
 	if *interactiveFlag {
-		appConfig.SetInteractive(true)
+		configFile.SetInteractive(true)
 	}
 
 	if *helpFlag {
@@ -47,7 +48,12 @@ func main() {
 		showHelp()
 		log.Fatalf(messages.CommandNotFound, flag.Args()[0])
 	}
-	if err := command.Main(flag.Args(), appConfig); err != nil {
+	if err := command.Main(flag.Args(), configFile); err != nil {
+		if _, ok := err.(*errors.ConfigChanged); ok {
+			configFile.Save()
+			log.Print(messages.ConfigFileSaved)
+			return
+		}
 		log.Fatal(err)
 	}
 

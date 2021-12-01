@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strconv"
 	"subteez/config"
+	serr "subteez/errors"
 	"subteez/messages"
 )
 
@@ -16,11 +17,11 @@ func set(args []string, config config.Config) error {
 	switch args[1] {
 	case "server":
 		config.SetServer(args[2])
-		return nil
+		return &serr.ConfigChanged{}
 	case "interactive":
 		if boolValue, err := strconv.ParseBool(args[2]); err == nil {
 			config.SetInteractive(boolValue)
-			return nil
+			return &serr.ConfigChanged{}
 		} else {
 			return err
 		}
