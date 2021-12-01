@@ -87,5 +87,5 @@ func showHelpTopic(topic string) {
 		log.Fatal(errors.ErrHelpTopicNotFound(topic))
 	}
 
-	fmt.Println(command.HelpTopic)
+	fmt.Printf(command.HelpTopic, constants.ExeName)
 }
