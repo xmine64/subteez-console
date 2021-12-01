@@ -7,6 +7,7 @@ import (
 	"strings"
 	"subteez/config"
 	"subteez/errors"
+	"subteez/messages"
 	"subteez/subteez"
 )
 
@@ -34,6 +35,10 @@ func Main(args []string, cfg config.Config) error {
 		id = fmt.Sprintf("/subtitles/%s/%s/%s", args[1], languageDownloadPathPart, args[3])
 	}
 
+	if !cfg.IsScriptMode() {
+		log.Printf(messages.GettingPage, id)
+	}
+
 	request := subteez.SubtitleDownloadRequest{
 		ID: id,
 	}
@@ -42,14 +47,19 @@ func Main(args []string, cfg config.Config) error {
 		return err
 	}
 
-	file, err := os.Create(name)
-	if err != nil {
-		return err
+	if cfg.IsScriptMode() {
+		if _, err := os.Stdout.Write(data); err != nil {
+			return err
+		}
+	} else {
+		file, err := os.Create(name)
+		if err != nil {
+			return err
+		}
+		if _, err = file.Write(data); err != nil {
+			return err
+		}
+		log.Printf(messages.FileWritten, name)
 	}
-	count, err := file.Write(data)
-	if err != nil {
-		return err
-	}
-	log.Printf("%d bytes written to file %s", count, name)
 	return nil
 }

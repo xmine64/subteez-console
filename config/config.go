@@ -18,6 +18,8 @@ type Config interface {
 	RemoveLanguageFilter(subteez.Language) error
 	IsInteractive() bool
 	SetInteractive(bool)
+	IsScriptMode() bool
+	SetScriptMode(bool)
 }
 
 type ConfigFile struct {
@@ -26,6 +28,7 @@ type ConfigFile struct {
 		Server      string             `json:"server"`
 		Languages   []subteez.Language `json:"languages"`
 		Interactive bool               `json:"interactive"`
+		ScriptMode  bool               `json:"script_mode"`
 	}
 }
 
@@ -54,7 +57,13 @@ func (c *ConfigFile) Load() error {
 	defer file.Close()
 
 	encoder := json.NewDecoder(file)
-	return encoder.Decode(&c.data)
+	if err := encoder.Decode(&c.data); err != nil {
+		return err
+	}
+	if c.data.Interactive && c.data.ScriptMode {
+		return errors.ErrInteractiveAndScript
+	}
+	return nil
 }
 
 func (c *ConfigFile) GetServer() string {
@@ -105,4 +114,12 @@ func (c *ConfigFile) IsInteractive() bool {
 
 func (c *ConfigFile) SetInteractive(interactive bool) {
 	c.data.Interactive = interactive
+}
+
+func (c *ConfigFile) IsScriptMode() bool {
+	return c.data.ScriptMode
+}
+
+func (c *ConfigFile) SetScriptMode(value bool) {
+	c.data.ScriptMode = value
 }

@@ -9,4 +9,5 @@ Title:    %s
 Author:   %s
 
 `
+	GettingPage = `requesting page "%s" from server`
 )

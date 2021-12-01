@@ -3,6 +3,7 @@ package files
 import (
 	"flag"
 	"fmt"
+	"log"
 	"strings"
 	"subteez/config"
 	"subteez/errors"
@@ -30,6 +31,10 @@ func Main(args []string, cfg config.Config) error {
 		return context.Run()
 	}
 
+	if !cfg.IsScriptMode() {
+		log.Printf(messages.GettingPage, id)
+	}
+
 	request := subteez.SubtitleDetailsRequest{
 		ID:              id,
 		LanguageFilters: cfg.GetLanguageFilters(),
@@ -43,9 +48,15 @@ func Main(args []string, cfg config.Config) error {
 		return errors.ErrNoFileFound
 	}
 
-	for _, item := range response.Files {
-		idParts := strings.SplitAfterN(item.ID, "/", 5)
-		fmt.Printf(messages.FileItem, idParts[4], item.Language.GetTitle(), item.Title, item.Author)
+	if cfg.IsScriptMode() {
+		for _, item := range response.Files {
+			fmt.Printf("%s,%s,%s,%s\n", item.ID, item.Language, item.Title, item.Author)
+		}
+	} else {
+		for _, item := range response.Files {
+			idParts := strings.SplitAfterN(item.ID, "/", 5)
+			fmt.Printf(messages.FileItem, idParts[4], item.Language.GetTitle(), item.Title, item.Author)
+		}
 	}
 
 	return nil

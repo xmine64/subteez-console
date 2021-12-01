@@ -3,6 +3,7 @@ package search
 import (
 	"flag"
 	"fmt"
+	"log"
 	"strings"
 	"subteez/config"
 	"subteez/errors"
@@ -27,6 +28,10 @@ func Main(args []string, cfg config.Config) error {
 		return errors.ErrEmptyQuery
 	}
 
+	if !cfg.IsScriptMode() {
+		log.Printf(messages.Searching, query)
+	}
+
 	request := subteez.SearchRequest{
 		Query:           query,
 		LanguageFilters: cfg.GetLanguageFilters(),
@@ -40,9 +45,15 @@ func Main(args []string, cfg config.Config) error {
 		return errors.ErrNoSearchResult
 	}
 
-	for _, item := range response.Result {
-		id := strings.SplitAfterN(item.ID, "/", 3)[2]
-		fmt.Printf(messages.SearchItem, item.Name, item.Count, id)
+	if cfg.IsScriptMode() {
+		for _, item := range response.Result {
+			fmt.Printf("%s,%s,%d\n", item.ID, item.Name, item.Count)
+		}
+	} else {
+		for _, item := range response.Result {
+			id := strings.SplitAfterN(item.ID, "/", 3)[2]
+			fmt.Printf(messages.SearchItem, item.Name, item.Count, id)
+		}
 	}
 
 	return nil

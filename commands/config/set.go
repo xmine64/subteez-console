@@ -22,6 +22,13 @@ func set(args []string, config config.Config) error {
 		} else {
 			return err
 		}
+	case "script":
+		if boolValue, err := strconv.ParseBool(args[2]); err == nil {
+			config.SetScriptMode(boolValue)
+			return errors.ErrConfigChanged
+		} else {
+			return err
+		}
 	default:
 		return errors.ErrConfigOptionNotFound(args[1])
 	}

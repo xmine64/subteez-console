@@ -1,11 +1,17 @@
 package messages
 
 const (
-	DumpConfig = `Server           = %s
+	DumpConfigHumanReadable = `Server           = %s
 Interactive Mode = %t
+Script Mode      = %t
 
 Enabled Language Filters:
 `
+
+	DumpConfig = `server=%s
+interactive=%t
+script=%t
+filters=%v`
 
 	ConfigOptionNotFound = `config option "%s" not found`
 

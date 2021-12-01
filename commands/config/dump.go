@@ -7,16 +7,27 @@ import (
 )
 
 func dump(args []string, config config.Config) error {
-	fmt.Printf(
-		messages.DumpConfig,
-		config.GetServer(),
-		config.IsInteractive(),
-	)
+	if config.IsScriptMode() {
+		fmt.Printf(
+			messages.DumpConfig,
+			config.GetServer(),
+			config.IsInteractive(),
+			config.IsScriptMode(),
+			config.GetLanguageFilters(),
+		)
+	} else {
+		fmt.Printf(
+			messages.DumpConfigHumanReadable,
+			config.GetServer(),
+			config.IsInteractive(),
+			config.IsScriptMode(),
+		)
 
-	for _, language := range config.GetLanguageFilters() {
-		fmt.Printf(" %s\n", language.GetTitle())
+		for _, language := range config.GetLanguageFilters() {
+			fmt.Printf(" %s\n", language.GetTitle())
+		}
+		fmt.Println()
 	}
-	fmt.Println()
 
 	return nil
 }

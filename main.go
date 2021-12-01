@@ -30,22 +30,37 @@ func main() {
 	}
 
 	interactiveFlag := flag.Bool("interactive", false, "")
+	scriptFlag := flag.Bool("script", false, "")
 	helpFlag := flag.Bool("help", false, "")
 
 	flag.Parse()
-
-	if *interactiveFlag {
-		configFile.SetInteractive(true)
-	}
 
 	if *helpFlag {
 		showHelpTopic(flag.Arg(0))
 		return
 	}
 
+	if *interactiveFlag && *scriptFlag {
+		log.Fatal(errors.ErrInteractiveAndScript)
+	}
+
+	if *interactiveFlag {
+		configFile.SetInteractive(true)
+		configFile.SetScriptMode(false)
+	} else if *scriptFlag {
+		configFile.SetInteractive(false)
+		configFile.SetScriptMode(true)
+	}
+
+	if !configFile.IsScriptMode() {
+		log.Printf(messages.Version, constants.Name, constants.VersionMajor, constants.VersionMinor, constants.VersionBuild)
+	}
+
 	command, exists := commands.AllCommands[flag.Args()[0]]
 	if !exists {
-		showHelp()
+		if !configFile.IsScriptMode() {
+			showHelp()
+		}
 		log.Fatal(errors.ErrCommandNotFound(flag.Args()[0]))
 	}
 	if err := command.Main(flag.Args(), configFile); err != nil {
@@ -56,7 +71,9 @@ func main() {
 		}
 		log.Fatal(err)
 	}
-
+	if !configFile.IsInteractive() {
+		log.Println(messages.Done)
+	}
 }
 
 func showHelp() {

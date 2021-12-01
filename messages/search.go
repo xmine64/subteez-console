@@ -7,4 +7,5 @@ const (
 ID:    %s
 
 `
+	Searching = `requesting search result for query "%s"`
 )
