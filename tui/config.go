@@ -100,7 +100,9 @@ func (c *Context) showConfigForm() {
 			c.app.Stop()
 		}).
 		AddButton(messages.ButtonCancel, func() {
-			c.app.Stop()
+			if !c.popView() {
+				c.showExitDialog()
+			}
 		}).
 		AddButton(messages.ButtonSetFilter, func() {
 			c.showSetLanguageFilterForm()

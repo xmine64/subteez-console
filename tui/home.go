@@ -5,34 +5,38 @@ package tui
 import (
 	"subteez/messages"
 
-	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 )
 
 func (c *Context) showHome() {
 	input := tview.NewInputField().
 		SetLabel(messages.QueryPrompt).
-		SetPlaceholder(messages.QueryPlaceholder).
 		SetText(c.query).
-		SetDoneFunc(func(key tcell.Key) {
-			if key == tcell.KeyEnter {
-				go c.showSearchResultList()
-				return
-			}
-		}).
+		SetFieldWidth(40).
 		SetChangedFunc(func(text string) {
 			c.query = text
-		})
-	input.SetBorder(true).SetTitle(messages.AppTitle)
+		}).
+		SetPlaceholder(messages.QueryPlaceholder)
+
+	form := tview.NewForm().AddFormItem(input).AddButton(messages.ButtonOK, func() {
+		if len(c.query) > 3 {
+			go c.showSearchResultList()
+		}
+	}).AddButton(messages.ButtonCancel, func() {
+		c.showExitDialog()
+	}).AddButton(messages.ButtonConfig, func() {
+		c.showConfigForm()
+	})
+	form.SetBorder(true).SetTitle(messages.AppTitle)
 
 	colFlex := tview.NewFlex().
 		AddItem(nil, 0, 1, false).
-		AddItem(input, 60, 1, true).
+		AddItem(form, 60, 1, true).
 		AddItem(nil, 0, 1, false)
 
 	rowFlex := tview.NewFlex().SetDirection(tview.FlexRow).
 		AddItem(nil, 0, 1, false).
-		AddItem(colFlex, 3, 1, true).
+		AddItem(colFlex, 7, 1, true).
 		AddItem(nil, 0, 1, false)
 
 	c.pushView(rowFlex)

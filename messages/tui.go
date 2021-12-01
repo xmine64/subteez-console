@@ -3,6 +3,9 @@ package messages
 const (
 	AppTitle = " Subteez "
 
+	ButtonSearch = "Search"
+	ButtonConfig = "Settings"
+
 	ButtonYes      = "Yes"
 	ButtonNo       = "No"
 	ExitDialogText = "Do you want exit?"
