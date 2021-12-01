@@ -29,6 +29,11 @@ func main() {
 		log.Fatal(errors.ErrNotEnoughArguments)
 	}
 
+	if fileInfo, _ := os.Stdout.Stat(); (fileInfo.Mode() & os.ModeCharDevice) == 0 {
+		configFile.SetInteractive(false)
+		configFile.SetScriptMode(true)
+	}
+
 	interactiveFlag := flag.Bool("interactive", false, "")
 	scriptFlag := flag.Bool("script", false, "")
 	helpFlag := flag.Bool("help", false, "")
