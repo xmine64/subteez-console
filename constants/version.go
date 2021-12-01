@@ -5,6 +5,6 @@ const (
 	ExeName      = "subteez"
 	VendorName   = "minusium"
 	VersionMajor = 0
-	VersionMinor = 0
+	VersionMinor = 1
 	VersionBuild = 0
 )
