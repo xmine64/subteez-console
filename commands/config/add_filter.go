@@ -8,7 +8,7 @@ import (
 	"subteez/subteez"
 )
 
-func addLanguage(args []string, config config.Config) error {
+func addFilter(args []string, config config.Config) error {
 	if len(args) < 2 {
 		return errors.New(messages.NotEnoughArguments)
 	}
