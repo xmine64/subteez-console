@@ -76,7 +76,7 @@ func main() {
 		}
 		log.Fatal(err)
 	}
-	if !configFile.IsInteractive() {
+	if !configFile.IsScriptMode() {
 		log.Println(messages.Done)
 	}
 }
