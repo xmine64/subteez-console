@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path"
 	"subteez/commands"
 	"subteez/config"
 	"subteez/constants"
@@ -19,14 +20,24 @@ func main() {
 		log.Fatal(errors.ErrNotEnoughArguments)
 	}
 
-	configFilePath := flag.String("config", constants.ConfigFileName, "")
+	configDir, err := os.UserConfigDir()
+	if err != nil {
+		log.Fatal(err)
+	}
+	configDir = path.Join(configDir, constants.VendorName, constants.Name)
+	if err = os.MkdirAll(configDir, os.ModePerm); err != nil {
+		log.Fatal(err)
+	}
+	configFilePath := path.Join(configDir, constants.ConfigFileName)
+
+	configFileFlag := flag.String("config", configFilePath, "")
 	interactiveFlag := flag.Bool("interactive", false, "")
 	scriptFlag := flag.Bool("script", false, "")
 	helpFlag := flag.Bool("help", false, "")
 
 	flag.Parse()
 
-	configFile := config.NewConfigFile(*configFilePath)
+	configFile := config.NewConfigFile(*configFileFlag)
 	if configFile.Load() != nil {
 		configFile.SetServer(constants.DefaultServer)
 		configFile.SetLanguageFilters(subteez.Languages)
@@ -59,7 +70,8 @@ func main() {
 	}
 
 	if !configFile.IsScriptMode() {
-		log.Printf(messages.Version, constants.Name, constants.VersionMajor, constants.VersionMinor, constants.VersionBuild)
+		log.Printf(messages.Version,
+			constants.Name, constants.VersionMajor, constants.VersionMinor, constants.VersionBuild, constants.VendorName)
 	}
 
 	command, exists := commands.AllCommands[flag.Args()[0]]

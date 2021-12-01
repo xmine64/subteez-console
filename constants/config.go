@@ -1,6 +1,6 @@
 package constants
 
 const (
-	ConfigFileName = "subteez.config"
+	ConfigFileName = "config.json"
 	DefaultServer  = "https://subteez1.herokuapp.com"
 )
