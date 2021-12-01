@@ -75,6 +75,11 @@ func showHelp() {
 }
 
 func showHelpTopic(topic string) {
+	if topic == "" {
+		showHelp()
+		return
+	}
+
 	command, exists := commands.AllCommands[topic]
 
 	if !exists {
