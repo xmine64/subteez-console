@@ -27,7 +27,7 @@ type ConfigFile struct {
 	data     struct {
 		Server      string             `json:"server"`
 		Languages   []subteez.Language `json:"languages"`
-		Interactive bool               `json:"interactive"`
+		Interactive bool               `json:"tui"`
 		ScriptMode  bool               `json:"script_mode"`
 	}
 }

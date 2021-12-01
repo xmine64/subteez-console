@@ -33,7 +33,7 @@ By %s
 
 	DeleteFilterConfirmText = "Delete language filter?"
 	ServerLabel             = "Server: "
-	InteractiveLabel        = "Interactive Mode: "
+	InteractiveLabel        = "TUI Mode: "
 	ButtonSave              = "Save"
 	ButtonCancel            = "Cancel"
 	ButtonSetFilter         = "Set Language Filters"

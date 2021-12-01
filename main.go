@@ -29,7 +29,7 @@ func main() {
 
 	// set command-line flags
 	configFileFlag := flag.String("config", configFilePath, "")
-	interactiveFlag := flag.Bool("interactive", false, "")
+	interactiveFlag := flag.Bool("tui", false, "")
 	scriptFlag := flag.Bool("script", false, "")
 	helpFlag := flag.Bool("help", false, "")
 

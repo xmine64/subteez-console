@@ -1,15 +1,15 @@
 package messages
 
 const (
-	DumpConfigHumanReadable = `Server           = %s
-Interactive Mode = %t
-Script Mode      = %t
+	DumpConfigHumanReadable = `Server      = %s
+TUI Mode    = %t
+Script Mode = %t
 
 Enabled Language Filters:
 `
 
 	DumpConfig = `server=%s
-interactive=%t
+tui=%t
 script=%t
 filters=%v`
 

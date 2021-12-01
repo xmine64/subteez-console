@@ -9,7 +9,7 @@ Options:
     
     -help [command] : Show help message
 
-    -interactive    : Enable interactive mode
+    -tui            : Enable interactive TUI mode
 
     -script         : Enable script mode
                       Script mode disables log and formats output for using in scripts
@@ -19,14 +19,14 @@ Commands:
 `
 	CommandRow = "    %s\t: %s\n\n"
 
-	SearchHelpTopic = `Usage: %s [-interactive] [-script] search <Query>
+	SearchHelpTopic = `Usage: %s search <Query>
 
-Search movies or series for given query and print the result or show a menu on interactive mode.
+Search movies or series for given query and print the result or show a menu on TUI mode.
 
 `
-	FilesHelpTopic = `Usage: %s [-interactive] [-script] files <Movie ID>
+	FilesHelpTopic = `Usage: %s files <Movie ID>
 	
-Show available files for given movie or series ID and print the result or show a menu on interactive mode.
+Show available files for given movie or series ID and print the result or show a menu on TUI mode.
 
 Example: files arcane-league-of-legends-first-season
 
@@ -48,7 +48,7 @@ Example using full address:
 
 	ConfigHelpTopic = `Usage: %s config [command]
 	
-Display or Change configurations.
+Display or Change configurations, using commands or using TUI menu.
 
 Commands:
 
