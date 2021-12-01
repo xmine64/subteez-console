@@ -38,7 +38,7 @@ var AllCommands = map[string]Command{
 	"config": {
 		Name:        "config",
 		Description: messages.ConfigDescription,
-		HelpTopic:   "",
+		HelpTopic:   messages.ConfigHelpTopic,
 		Main:        configCommand.Main,
 	},
 }
