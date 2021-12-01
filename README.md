@@ -1,6 +1,6 @@
 # Subteez Console
 This is a console version of [Subteez App](https://play.google.com/store/apps/details?id=madamin.subtitles).
-You can use it to search and download subtitles from [Subteez server](https://github.com/minusium/subteez-subscene-proxy).
+You can use it to search and download subtitles from [Subteez server](https://github.com/minusium/subteez-subscene-proxy), or write scripts to do automated tasks.
 
 # Screenshots
 * Interactive Mode:
@@ -67,15 +67,15 @@ Author:   NguyenBich
 
 ```
 
-* Set interactive mode to enable 
+* Set interactive mode to be enabled without `-interactive` option:
 ```
 > subteez config set interactive true
 
 ```
 
-* Print subtitle file content to console
+* Print subtitle file content to console:
 ```
-> subteez download arcane-league-of-legends-first-season en 2625728 | zcat
+> subteez -script download arcane-league-of-legends-first-season en 2625728 | zcat
 1
 00:00:19,375 --> 00:00:23,125
 [foreboding music plays]
