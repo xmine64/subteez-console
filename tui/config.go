@@ -10,10 +10,10 @@ import (
 	"github.com/rivo/tview"
 )
 
-func (c *Context) showAddLanguageFilterForm() {
+func (c *Context) showAddLanguageFilterDialog() {
 	var selected subteez.Language
 
-	dropdown := tview.NewDropDown().SetLabel(messages.LanguageLabel)
+	dropdown := tview.NewDropDown().SetLabel(messages.LanguageLabel).SetFieldWidth(20)
 
 	// add disabled filters to dropdown
 Languages:
@@ -48,7 +48,17 @@ Languages:
 
 	form.SetBorder(true).SetTitle(messages.AddFilterTitle)
 
-	c.pushView(form)
+	colFlex := tview.NewFlex().
+		AddItem(nil, 0, 1, false).
+		AddItem(form, 40, 1, true).
+		AddItem(nil, 0, 1, false)
+
+	rowFlex := tview.NewFlex().SetDirection(tview.FlexRow).
+		AddItem(nil, 0, 1, false).
+		AddItem(colFlex, 14, 1, true).
+		AddItem(nil, 0, 1, false)
+
+	c.pushView(rowFlex)
 }
 
 func (c *Context) showRemoveLanguageFilterDialog(language subteez.Language) {
@@ -72,7 +82,7 @@ func (c *Context) showRemoveLanguageFilterDialog(language subteez.Language) {
 
 func (c *Context) showSetLanguageFilterForm() {
 	list := tview.NewList().AddItem(messages.ButtonAdd, "", 'a', func() {
-		c.showAddLanguageFilterForm()
+		c.showAddLanguageFilterDialog()
 	})
 
 	for _, language := range c.config.GetLanguageFilters() {
@@ -109,5 +119,16 @@ func (c *Context) showConfigForm() {
 		})
 
 	form.SetBorder(true).SetTitle(messages.ConfigTitle)
-	c.pushView(form)
+
+	colFlex := tview.NewFlex().
+		AddItem(nil, 0, 1, false).
+		AddItem(form, 60, 1, true).
+		AddItem(nil, 0, 1, false)
+
+	rowFlex := tview.NewFlex().SetDirection(tview.FlexRow).
+		AddItem(nil, 0, 1, false).
+		AddItem(colFlex, 9, 1, true).
+		AddItem(nil, 0, 1, false)
+
+	c.pushView(rowFlex)
 }
