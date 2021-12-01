@@ -18,7 +18,7 @@ type SubtitleDetailsRequest struct {
 }
 
 type SubtitleDownloadRequest struct {
-	ID string `json:"id"`
+	ID string `json:"id" form:"id"`
 }
 
 type SearchResultItem struct {

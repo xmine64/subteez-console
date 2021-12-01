@@ -4,7 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"io"
+	"mime"
 	"net/http"
+	"net/url"
 	"time"
 )
 
@@ -36,10 +38,10 @@ func (client subteezClient) sendRequest(endpoint string, request interface{}) ([
 		client.baseAddress+endpoint,
 		bytes.NewBuffer(requestJson),
 	)
-	httpRequest.Header.Add("Content-Type", "application/json")
 	if err != nil {
 		return nil, err
 	}
+	httpRequest.Header.Add("Content-Type", "application/json")
 	response, err := client.httpClient.Do(httpRequest)
 	if response != nil {
 		defer response.Body.Close()
@@ -97,10 +99,36 @@ func (client subteezClient) GetDetails(request SubtitleDetailsRequest) (*Subtitl
 	return &result, nil
 }
 
-func (client subteezClient) Download(request SubtitleDownloadRequest) ([]byte, error) {
-	data, err := client.sendRequest(endpointDownload, request)
-	if err != nil {
-		return nil, err
+func (client subteezClient) Download(request SubtitleDownloadRequest) (string, []byte, error) {
+	parameters := url.Values{"id": {request.ID}}.Encode()
+	url := client.baseAddress + endpointDownload + "?" + parameters
+	response, err := client.httpClient.Get(url)
+	if response != nil {
+		defer response.Body.Close()
 	}
-	return data, nil
+	if err != nil {
+		return "", nil, err
+	}
+	if response.StatusCode != http.StatusOK {
+		switch response.StatusCode {
+		case http.StatusNotFound:
+			return "", nil, ErrNotFound
+		case http.StatusBadRequest:
+			return "", nil, ErrBadRequest
+		case http.StatusInternalServerError:
+			return "", nil, ErrServer
+		}
+		return "", nil, ErrUnhandledResponse(response.Status)
+	}
+
+	data, err := io.ReadAll(response.Body)
+	if err != nil {
+		return "", nil, err
+	}
+
+	_, params, err := mime.ParseMediaType(response.Header.Get("Content-Disposition"))
+	if err != nil {
+		return "", nil, err
+	}
+	return params["filename"], data, nil
 }

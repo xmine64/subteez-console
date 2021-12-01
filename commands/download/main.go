@@ -2,6 +2,8 @@ package download
 
 import (
 	"fmt"
+	"log"
+	"os"
 	"strings"
 	"subteez/config"
 	"subteez/errors"
@@ -35,10 +37,19 @@ func Main(args []string, cfg config.Config) error {
 	request := subteez.SubtitleDownloadRequest{
 		ID: id,
 	}
-	response, err := client.Download(request)
+	name, data, err := client.Download(request)
 	if err != nil {
 		return err
 	}
 
-	return fmt.Errorf("file saving not implemented but %d bytes downloaded", len(response))
+	file, err := os.Create(name)
+	if err != nil {
+		return err
+	}
+	count, err := file.Write(data)
+	if err != nil {
+		return err
+	}
+	log.Printf("%d bytes written to file %s", count, name)
+	return nil
 }
