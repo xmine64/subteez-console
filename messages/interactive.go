@@ -39,4 +39,9 @@ By %s
 	ButtonSetFilter         = "Set Language Filters"
 	ButtonAdd               = "Add"
 	LanguageLabel           = "Language: "
+
+	DownloadingStatus     = "Downloading file..."
+	WritingStatus         = "Writing file..."
+	FileWrittenDialogText = "%d bytes written to file %s."
+	ButtonOK              = "OK"
 )

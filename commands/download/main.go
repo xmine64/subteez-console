@@ -7,6 +7,7 @@ import (
 	"strings"
 	"subteez/config"
 	"subteez/errors"
+	"subteez/interactive"
 	"subteez/messages"
 	"subteez/subteez"
 )
@@ -33,6 +34,13 @@ func Main(args []string, cfg config.Config) error {
 			return err
 		}
 		id = fmt.Sprintf("/subtitles/%s/%s/%s", args[1], languageDownloadPathPart, args[3])
+	}
+
+	if cfg.IsInteractive() {
+		context := interactive.Context{}
+		context.Initialize(cfg)
+		go context.NavigateToDownload(id)
+		return context.Run()
 	}
 
 	if !cfg.IsScriptMode() {

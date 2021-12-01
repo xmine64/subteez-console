@@ -82,6 +82,16 @@ func (c *Context) NavigateToDetails(id string) {
 	c.showItemDetails()
 }
 
+// must not be called from main loop and event handlers
+func (c *Context) NavigateToDownload(id string) {
+	if id == "" {
+		return
+	}
+	c.fileId = id
+	c.viewStack = c.viewStack[:0]
+	c.showDownloadDialog()
+}
+
 func (c *Context) NavigateToConfig() {
 	c.viewStack = c.viewStack[:0]
 	c.showConfigForm()

@@ -61,9 +61,10 @@ func (c *Context) showItemDetails() {
 
 	list.SetBorder(true).SetTitle(messages.FilesTitle)
 
-	for _, item := range response.Files {
+	for _, file := range response.Files {
+		item := file
 		list.AddItem(item.Title, item.Language.GetTitle(), 0, func() {
-			// TODO: download and save file
+			go c.showDownloadDialog()
 		})
 	}
 
