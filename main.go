@@ -10,16 +10,12 @@ import (
 	"subteez/config"
 	"subteez/constants"
 	"subteez/errors"
+	"subteez/interactive"
 	"subteez/messages"
 	"subteez/subteez"
 )
 
 func main() {
-	if len(os.Args) < 2 {
-		showHelp()
-		log.Fatal(errors.ErrNotEnoughArguments)
-	}
-
 	configDir, err := os.UserConfigDir()
 	if err != nil {
 		log.Fatal(err)
@@ -74,12 +70,26 @@ func main() {
 			constants.Name, constants.VersionMajor, constants.VersionMinor, constants.VersionBuild, constants.VendorName)
 	}
 
-	command, exists := commands.AllCommands[flag.Args()[0]]
+	if flag.NArg() < 1 {
+		if configFile.IsInteractive() {
+			context := &interactive.Context{}
+			context.Initialize(configFile)
+			if err := context.Run(); err != nil {
+				log.Fatal(err)
+			}
+			return
+		} else {
+			showHelp()
+			log.Fatal(errors.ErrNotEnoughArguments)
+		}
+	}
+
+	command, exists := commands.AllCommands[flag.Arg(0)]
 	if !exists {
 		if !configFile.IsScriptMode() {
 			showHelp()
 		}
-		log.Fatal(errors.ErrCommandNotFound(flag.Args()[0]))
+		log.Fatal(errors.ErrCommandNotFound(flag.Arg(0)))
 	}
 	if err := command.Main(flag.Args(), configFile); err != nil {
 		if _, ok := err.(*errors.ConfigChanged); ok {
