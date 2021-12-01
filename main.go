@@ -69,22 +69,12 @@ func showHelp() {
 }
 
 func showHelpTopic(topic string) {
-	switch topic {
-	case "":
-		showHelp()
-		return
-	case "search":
-		fmt.Printf(messages.SearchHelpTopic, constants.ExeName)
-		return
-	case "files":
-		fmt.Printf(messages.FilesHelpTopic, constants.ExeName)
-		return
-	case "download":
-		fmt.Printf(messages.DownloadHelpTopic, constants.ExeName)
-		return
-	default:
+	command, exists := commands.AllCommands[topic]
+
+	if !exists {
 		showHelp()
 		log.Fatalf(messages.TopicNotFound, topic)
-		return
 	}
+
+	fmt.Println(command.HelpTopic)
 }
