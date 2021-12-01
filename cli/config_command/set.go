@@ -17,7 +17,7 @@ func set(args []string, config config.Config) error {
 	case "server":
 		config.SetServer(args[2])
 		return errors.ErrConfigChanged
-	case "interactive":
+	case "tui":
 		if boolValue, err := strconv.ParseBool(args[2]); err == nil {
 			config.SetInteractive(boolValue)
 			return errors.ErrConfigChanged

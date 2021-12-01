@@ -56,7 +56,10 @@ Commands:
 
             set [config] [value]   : set config to given value
 
-                                     possible configs: server, interactive
+                                     possible configs: server, tui
+                                     
+                                     example: set server https://localhost:5000
+                                              set tui true
 
             add-filter [language]  : add language to language filters
 
