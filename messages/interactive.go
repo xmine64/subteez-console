@@ -14,16 +14,29 @@ const (
 	QueryPrompt      = "Query: "
 	QueryPlaceholder = "Search for movies or series..."
 
-	MovieInfoTitle   = " Info "
-	FileDetailsTitle = " Details "
-	FilesTitle       = " Files "
+	MovieInfoTitle       = " Info "
+	FileDetailsTitle     = " Details "
+	FilesTitle           = " Files "
+	ConfigTitle          = " Config "
+	LanguageFiltersTitle = " Language Filters "
+	AddFilterTitle       = " Add Language Filter "
+	ConfirmTitle         = " Confirm "
 
 	MovieInfo = `Title: %s
-Count: %d file(s)
-Year:  %s`
+	Count: %d file(s)
+	Year:  %s`
 
 	FileDetails = `Name: %s
-By %s
+	By %s
+	
+	%s`
 
-%s`
+	DeleteFilterConfirmText = "Delete language filter?"
+	ServerLabel             = "Server: "
+	InteractiveLabel        = "Interactive Mode: "
+	ButtonSave              = "Save"
+	ButtonCancel            = "Cancel"
+	ButtonSetFilter         = "Set Language Filters"
+	ButtonAdd               = "Add"
+	LanguageLabel           = "Language: "
 )

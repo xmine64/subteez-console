@@ -81,3 +81,8 @@ func (c *Context) NavigateToDetails(id string) {
 	c.viewStack = c.viewStack[:0]
 	c.showItemDetails()
 }
+
+func (c *Context) NavigateToConfig() {
+	c.viewStack = c.viewStack[:0]
+	c.showConfigForm()
+}
