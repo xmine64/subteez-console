@@ -23,13 +23,13 @@ const (
 	ConfirmTitle         = " Confirm "
 
 	MovieInfo = `Title: %s
-	Count: %d file(s)
-	Year:  %s`
+Count: %d file(s)
+Year:  %s`
 
 	FileDetails = `Name: %s
-	By %s
+By %s
 	
-	%s`
+%s`
 
 	DeleteFilterConfirmText = "Delete language filter?"
 	ServerLabel             = "Server: "
